@@ -11,14 +11,18 @@ interface TrendingArticle {
   views: number;
 }
 
-export default function TrendingArticles() {
+interface TrendingArticlesProps {
+  apiUrl: string;
+}
+
+export default function TrendingArticles({ apiUrl }: TrendingArticlesProps) {
   const [trendingArticles, setTrendingArticles] = useState<TrendingArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTrendingArticles = async () => {
       try {
-        const response = await fetch('/api/articles/trending');
+        const response = await fetch(`${apiUrl}/api/articles/trending`);
         const data = await response.json() as TrendingArticle[];
         setTrendingArticles(data);
       } catch (error) {
@@ -29,7 +33,7 @@ export default function TrendingArticles() {
     };
 
     fetchTrendingArticles();
-  }, []);
+  }, [apiUrl]);
 
   if (loading) {
     return (
