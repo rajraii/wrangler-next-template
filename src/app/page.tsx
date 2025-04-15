@@ -3,13 +3,12 @@ import { ArticlesData } from "@/types/article";
 import TrendingArticles from "@/components/TrendingArticles";
 
 async function getArticles(): Promise<ArticlesData> {
-  console.log("process.env.API_URL", process.env.API_URL);
   const res = await fetch(`${process.env.API_URL}/api/articles`, {
     cache: 'no-store' // This ensures we get fresh data on each request
   });
   
   if (!res.ok) {
-    throw new Error('Failed to fetch articles'); 
+    throw new Error(`Failed to fetch articles ${res.body}`); 
   }
 
   const response: ArticlesData = await res.json();

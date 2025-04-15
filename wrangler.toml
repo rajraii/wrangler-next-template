@@ -1,2 +1,3 @@
 [vars]
-API_URL = "https://test.thepublive.workers.dev/"
+API_URL = "https://test.thepublive.workers.dev"
+enabled = "true"
