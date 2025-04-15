@@ -3,7 +3,7 @@ import { ArticlesData } from "@/types/article";
 import TrendingArticles from "@/components/TrendingArticles";
 
 async function getArticles(): Promise<ArticlesData> {
-  const res = await fetch('http://localhost:3000/api/articles', {
+  const res = await fetch(`${process.env.API_URL}/api/articles`, {
     cache: 'no-store' // This ensures we get fresh data on each request
   });
   
@@ -107,7 +107,7 @@ export default async function Home() {
       {/* Trending Articles - Client Side Rendered */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TrendingArticles />
+          <TrendingArticles apiUrl={process.env.API_URL || 'http://localhost:3000'} />
         </div>
       </section>
 
