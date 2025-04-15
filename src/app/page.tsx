@@ -8,7 +8,7 @@ async function getArticles(): Promise<ArticlesData> {
   });
   
   if (!res.ok) {
-    throw new Error('Failed to fetch articles');
+    throw new Error('Failed to fetch articles'); 
   }
   return res.json();
 }
