@@ -1,23 +1,11 @@
 import Image from "next/image";
-import { ArticlesData } from "@/types/article";
 import TrendingArticles from "@/components/TrendingArticles";
+import { getPosts } from "@/utils/posts";
 
-async function getArticles(): Promise<ArticlesData> {
-  const res = await fetch(`${process.env.API_URL}/api/articles`, {
-    cache: 'no-store' // This ensures we get fresh data on each request
-  });
-  
-  if (!res.ok) {
-    throw new Error(`Failed to fetch articles ${res.body}`); 
-  }
-
-  const response: ArticlesData = await res.json();
-  console.log("response", response);
-  return response;
-}
+export const runtime = 'edge';
 
 export default async function Home() {
-  const { featured, latest, categories } = await getArticles();
+  const posts = await getPosts();
 
   return (
     <main className="min-h-screen bg-white">
@@ -25,7 +13,7 @@ export default async function Home() {
       <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">Magazine</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Publive Demo</h1>
             <nav className="hidden md:flex space-x-8">
               <a href="#" className="text-gray-600 hover:text-gray-900">Home</a>
               <a href="#" className="text-gray-600 hover:text-gray-900">Politics</a>
@@ -43,34 +31,38 @@ export default async function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="relative h-[500px]">
               <Image
-                src={featured.image}
-                alt={featured.title}
+                src={posts[0].banner_url}
+                alt={posts[0].title}
                 fill
                 className="object-cover rounded-lg"
               />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
                 <span className="text-sm text-white bg-red-600 px-3 py-1 rounded-full">Featured</span>
-                <h2 className="mt-2 text-3xl font-bold text-white">{featured.title}</h2>
-                <p className="mt-2 text-white/80">{featured.description}</p>
+                <h2 className="mt-2 text-3xl font-bold text-white">{posts[0].title}</h2>
+                <p className="mt-2 text-white/80">{posts[0].summary}</p>
               </div>
             </div>
             <div className="space-y-6">
               <div className="bg-gray-100 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold">Latest Updates</h3>
+                <h3 className="text-xl text-gray-900 font-semibold">Latest Updates</h3>
                 <div className="mt-4 space-y-4">
-                  {latest.map((article) => (
-                    <div key={article.id} className="flex gap-4">
+                  {posts.slice(1, 5).map((post) => (
+                    <div key={post.id} className="flex gap-4 relative">
                       <div className="w-24 h-24 relative">
                         <Image
-                          src={article.image}
-                          alt={article.title}
+                          src={post.banner_url}
+                          alt={post.title}
                           fill
                           className="object-cover rounded"
                         />
                       </div>
                       <div>
-                        <h4 className="font-medium">{article.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{article.description}</p>
+                        <h4 className="font-medium text-gray-900">{post.title}</h4>
+                        <p className="text-sm text-gray-600 mt-1">{post.summary}</p>
+
+                        <div className="flex gap-2 absolute bottom-0">
+                          <span className="text-sm text-gray-600">{new Date(post.formatted_last_published_at_datetime).toLocaleDateString() + " " + new Date(post.formatted_last_published_at_datetime).toLocaleTimeString()}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -86,20 +78,20 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-8">Featured Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.map((category) => (
-              <div key={category.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            {posts.map((post) => (
+              <div key={post.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div className="relative h-48">
                   <Image
-                    src={category.image}
-                    alt={category.name}
+                    src={post.banner_url}
+                    alt={post.title}
                     fill
                     className="object-cover"
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
-                  <p className="text-gray-600">{category.description}</p>
-                  <a href="#" className="mt-4 inline-block text-blue-600 hover:text-blue-800">Read More →</a>
+                <div className="p-6 relative h-[160px]">
+                  <h3 className="text-xl text-gray-900 font-semibold mb-2 line-clamp-2">{post.title}</h3>
+                  <p className="text-gray-600 line-clamp-1">{post.summary}</p>
+                  <a href="#" className="mt-4 inline-block absolute bottom-[15px] text-blue-600 hover:text-blue-800">Read More →</a>
                 </div>
               </div>
             ))}
@@ -108,9 +100,9 @@ export default async function Home() {
       </section>
 
       {/* Trending Articles - Client Side Rendered */}
-      <section className="py-12">
+      <section>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TrendingArticles apiUrl={process.env.API_URL ?? ""} />
+          <TrendingArticles apiUrl={process.env.NEXTJS_API_URL ?? ""} />
         </div>
       </section>
 

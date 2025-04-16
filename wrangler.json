@@ -18,7 +18,10 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	"env": {
+		"NEXTJS_API_URL": "https://cds-beta.thepublive.com/publisher/1684"
+	}
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
