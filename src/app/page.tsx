@@ -2,8 +2,6 @@ import Image from "next/image";
 import TrendingArticles from "@/components/TrendingArticles";
 import { getPosts } from "@/utils/posts";
 
-export const runtime = 'edge';
-
 export default async function Home() {
   const posts = await getPosts();
 
