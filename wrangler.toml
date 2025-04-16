@@ -1,0 +1,3 @@
+[vars]
+NEXTJS_API_URL = https://cds-beta.thepublive.com/publisher/2344
+NEXTJS_ENV = development
