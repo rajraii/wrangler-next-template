@@ -33,13 +33,12 @@
   },
   "scripts": {
     "build": "next build",
-    "check": "npm run prebuild && opennextjs-cloudflare build && tsc && wrangler deploy --dry-run",
-    "deploy": "npm run prebuild && opennextjs-cloudflare build && wrangler deploy",
+    "check": "opennextjs-cloudflare build && tsc && wrangler deploy --dry-run",
+    "deploy": "opennextjs-cloudflare build && wrangler deploy",
     "dev": "next dev",
     "lint": "next lint",
-    "preview": "npm run prebuild && opennextjs-cloudflare build && wrangler dev",
+    "preview": "opennextjs-cloudflare build && wrangler dev",
     "start": "next start",
-    "types": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "prebuild": "node sync-env-to-wrangler.js"
+    "types": "wrangler types --env-interface CloudflareEnv env.d.ts"
   }
 }
